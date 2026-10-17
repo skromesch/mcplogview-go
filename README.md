@@ -52,14 +52,6 @@ Details: **[Getting started](docs/getting-started.md)**.
 - **Config lookup:** `--config`, `$LOG_SOURCES_CONFIG`, `./mcplogview.json`, `~/.config/mcplogview/config.json`.
 - **Tools for agents:** `list_logs`, `get_log_skill`, `read_log_chunk`, `follow_log`.
 
-## Differences from the TypeScript version
-
-- The config is found automatically and no file is created for you; there is an interactive `configure`.
-- Relative paths in a config resolve against that file's directory. The default self-log moved to the state dir.
-- New: `docker` sources, `disabled` sources with live reload, HTTP bearer-token auth.
-- Local reads seek to the cursor instead of loading the whole file; SSH reads transfer at most 4 MiB per call.
-- Cursors for local and SSH sources stay compatible with the TypeScript format.
-
 ## Development
 
 ```bash

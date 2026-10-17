@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	// EnvConfig keeps compatibility with the TypeScript implementation.
+	// EnvConfig names the environment variable that points to the config file.
 	EnvConfig = "LOG_SOURCES_CONFIG"
 	// LocalConfigName is looked up in the current working directory.
 	LocalConfigName = "mcplogview.json"
