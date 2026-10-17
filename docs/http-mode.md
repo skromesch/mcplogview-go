@@ -7,8 +7,7 @@ you instead run **one shared instance** that many agents (and many people) conne
 - SSH keys and Docker access on a single machine instead of on every laptop,
 - agents that cannot start local processes.
 
-It speaks **Streamable HTTP**, the current MCP transport, on a single endpoint (default `/mcp`). It does not serve
-the older two-endpoint SSE transport.
+It speaks **Streamable HTTP** on a single endpoint (default `/mcp`).
 
 ## Set it up
 

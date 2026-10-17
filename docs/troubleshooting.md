@@ -98,8 +98,9 @@ Intended: a network-facing server needs a token. `mcplogview transport --new-tok
 Add the header `Authorization: Bearer <token>` in the Inspector, and make sure you use the URL with the path
 (`http://host:3333/mcp`). Details in [HTTP mode](http-mode.md#browser-clients-mcp-inspector).
 
-**An old client cannot connect at all.**
-mcplogview serves Streamable HTTP only, not the legacy `/sse` + `/messages` transport.
+**A client cannot connect at all.**
+The client must support MCP over Streamable HTTP and be pointed at the endpoint URL including its path
+(default `/mcp`).
 
 ## Docker deployment
 
