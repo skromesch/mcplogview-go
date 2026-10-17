@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="977" height="380" viewBox="0 0 977 380" role="img" aria-label="mcplogview register">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="977" height="380" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h957a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="488" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview register</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="176.4" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview register</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="646.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">This server runs over HTTP: start it once (e.g. in tmux or as a service) with</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview serve</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="100.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">Claude Code:</tspan></text>
+<text x="18" y="195.0" xml:space="preserve" textLength="940.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">  claude mcp add --transport http mcplogview http://shop-host.example.com:38333/mcp --header 'Authorization: Bea</tspan></text>
+<text x="18" y="213.0" xml:space="preserve" textLength="310.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">rer OYJFpelBPNTZxkcETdPXBSBEyqGDX2P6'</tspan></text>
+<text x="18" y="249.0" xml:space="preserve" textLength="504.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">Other MCP clients (the exact JSON shape differs per client):</tspan></text>
+<text x="18" y="285.0" xml:space="preserve" textLength="940.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">  "mcplogview": { "type": "http", "url": "http://shop-host.example.com:38333/mcp", "headers": { "Authorization":</tspan></text>
+<text x="18" y="303.0" xml:space="preserve" textLength="386.4" lengthAdjust="spacing"><tspan fill="#c9d1d9"> "Bearer OYJFpelBPNTZxkcETdPXBSBEyqGDX2P6" } }</tspan></text>
+<text x="18" y="339.0" xml:space="preserve" textLength="663.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">Note: plain HTTP sends the token unencrypted. Use it only on a trusted network,</tspan></text>
+<text x="18" y="357.0" xml:space="preserve" textLength="546.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">through an SSH tunnel, or behind a TLS-terminating reverse proxy.</tspan></text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="943" height="200" viewBox="0 0 943 200" role="img" aria-label="mcplogview list">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="943" height="200" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h923a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="472" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview list</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="142.8" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview list</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="529.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">config: /home/dev/work/shop/mcplogview.json (current directory)</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">ID               STATE  TYPE    LABEL                LOCATION</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="907.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview-self  on     local   MCP Server Self Log  /home/dev/.local/state/mcplogview/mcplogview-server.log</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="714.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">app              on     local   Shop app log         /home/dev/work/shop/logs/app.log</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">shop-api         on     docker  shop-api             shop-api</tspan></text>
+<text x="18" y="177.0" xml:space="preserve" textLength="638.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">legacy           off    local   legacy               /var/log/legacy/old.log</tspan></text>
+</svg>

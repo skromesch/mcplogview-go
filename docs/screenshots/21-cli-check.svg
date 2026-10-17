@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="548" height="164" viewBox="0 0 548 164" role="img" aria-label="mcplogview check">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="548" height="164" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h528a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="274" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview check</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview check</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="495.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">ok    app                  /home/dev/work/shop/logs/app.log</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="294.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">ok    shop-api             shop-api</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="420.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">FAIL  legacy               /var/log/legacy/old.log</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">      open /var/log/legacy/old.log: no such file or directory</tspan></text>
+</svg>

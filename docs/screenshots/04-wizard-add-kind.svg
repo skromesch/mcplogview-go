@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="414" height="308" viewBox="0 0 414 308" role="img" aria-label="mcplogview configure">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="414" height="308" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h394a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="207" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview configure</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="361.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">Config: /home/dev/work/shop/mcplogview.json</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  (no sources yet)</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="226.8" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#5f5fd7" font-weight="bold">What do you want to read?</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="252.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#ff87d7">&gt; </tspan><tspan fill="#00af87">A log file on this machine</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="310.8" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">A log file on a remote host (ssh)</tspan></text>
+<text x="18" y="177.0" xml:space="preserve" textLength="319.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">A Docker container on this machine</tspan></text>
+<text x="18" y="195.0" xml:space="preserve" textLength="378.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">A Docker container on a remote host (ssh)</tspan></text>
+<text x="18" y="213.0" xml:space="preserve" textLength="84.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">« back</tspan></text>
+<text x="18" y="231.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="249.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="285.0" xml:space="preserve" textLength="327.6" lengthAdjust="spacing"><tspan fill="#626262">↑</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">up</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">↓</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">down</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">/</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">filter</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">submit</tspan></text>
+</svg>

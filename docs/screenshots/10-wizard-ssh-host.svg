@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="632" height="308" viewBox="0 0 632 308" role="img" aria-label="mcplogview configure">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="632" height="308" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h612a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="316" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview configure</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="361.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">Config: /home/dev/work/shop/mcplogview.json</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="546.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  [x] app                local   /home/dev/work/shop/logs/app.log</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="344.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  [x] shop-api           docker  shop-api</tspan></text>
+<rect x="43.2" y="128.0" width="8.4" height="18.0" fill="#b1bac4"/>
+<text x="18" y="141.0" xml:space="preserve" textLength="25.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#b1bac4">/</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="319.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> just type to filter, enter to choose</tspan></text>
+<text x="18" y="177.0" xml:space="preserve" textLength="100.8" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#ff87d7">&gt; </tspan><tspan fill="#00af87">prod-api</tspan></text>
+<text x="18" y="195.0" xml:space="preserve" textLength="126.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">staging-api</tspan></text>
+<text x="18" y="213.0" xml:space="preserve" textLength="277.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">« enter host details manually</tspan></text>
+<text x="18" y="231.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">« back to menu</tspan></text>
+<text x="18" y="249.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="285.0" xml:space="preserve" textLength="596.4" lengthAdjust="spacing"><tspan fill="#626262">↑</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">up</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">↓</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">down</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">/</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">filter</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">shift+tab</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">back</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">select</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">submit</tspan></text>
+</svg>

@@ -1,0 +1,18 @@
+{
+  "transport": {
+    "mode": "http",
+    "host": "0.0.0.0",
+    "port": 3333,
+    "path": "/mcp"
+  },
+  "skillsDir": "/config/log-skills",
+  "sources": [
+    {
+      "id": "demo",
+      "label": "Demo log",
+      "description": "Sample file shipped with the repository",
+      "hint": "Replace this source with your own (see docs/docker.md).",
+      "path": "/logs/app.log"
+    }
+  ]
+}

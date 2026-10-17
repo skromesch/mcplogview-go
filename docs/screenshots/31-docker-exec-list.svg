@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="182" viewBox="0 0 800 182" role="img" aria-label="docker compose exec mcplogview mcplogview list">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="800" height="182" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h780a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="400" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">docker compose exec mcplogview mcplogview list</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="403.2" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> docker compose exec mcplogview mcplogview list</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="470.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">config: /config/mcplogview.json (LOG_SOURCES_CONFIG env)</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">ID               STATE  TYPE    LABEL                LOCATION</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="764.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview-self  on     local   MCP Server Self Log  /data/mcplogview/mcplogview-server.log</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="554.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">demo             on     local   Demo log             /logs/app.log</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">shop-api         on     docker  Shop API container   shop-api</tspan></text>
+</svg>

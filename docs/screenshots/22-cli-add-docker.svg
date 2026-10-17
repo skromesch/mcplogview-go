@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="742" height="128" viewBox="0 0 742 128" role="img" aria-label="mcplogview add docker --id shop-worker --container shop-worker --label Shop worker">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="742" height="128" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h722a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="371" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview add docker --id shop-worker --container shop-worker --label Shop worker</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="705.6" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview add docker --id shop-worker --container shop-worker --label Shop worker</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="75.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">check: ok</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="588.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">added shop-worker (shop-worker) to /home/dev/work/shop/mcplogview.json</tspan></text>
+</svg>

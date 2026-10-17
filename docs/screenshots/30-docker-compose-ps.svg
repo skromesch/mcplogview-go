@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1481" height="146" viewBox="0 0 1481 146" role="img" aria-label="docker compose ps">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="1481" height="146" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h1461a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="740" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">docker compose ps</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="159.6" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> docker compose ps</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="1285.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">NAME                        IMAGE                                  COMMAND                  SERVICE        CREATED         STATUS                   PORTS</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="1310.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview-docker-proxy-1   tecnativa/docker-socket-proxy:v0.5.0   "docker-entrypoint.s…"   docker-proxy   7 seconds ago   Up 7 seconds             2375/tcp</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="1444.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview-mcplogview-1     mcplogview:dev                         "mcplogview serve"       mcplogview     7 seconds ago   Up 7 seconds (healthy)   127.0.0.1:3333-&gt;3333/tcp</tspan></text>
+</svg>

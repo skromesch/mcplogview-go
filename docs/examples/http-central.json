@@ -1,0 +1,13 @@
+{
+  "transport": {
+    "mode": "http",
+    "host": "0.0.0.0",
+    "port": 3333,
+    "path": "/mcp",
+    "authToken": "change-me-to-a-long-random-token",
+    "allowedOrigins": ["https://inspector.example.com"]
+  },
+  "sources": [
+    { "id": "app", "label": "App log", "path": "/var/log/myapp/app.log" }
+  ]
+}

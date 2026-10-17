@@ -1,0 +1,12 @@
+.git
+.github
+.codegraph
+docs
+deploy
+dist
+*.md
+.env
+.env.*
+compose.yaml
+Dockerfile
+**/*_test.go

@@ -1,0 +1,2 @@
+# Host keys that ssh sources trust. Mounted read-only into the container.
+# Add entries with:  ssh-keyscan -t ed25519 your.host >> deploy/docker/ssh/known_hosts

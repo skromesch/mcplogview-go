@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="918" height="956" viewBox="0 0 918 956" role="img" aria-label="mcplogview">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="918" height="956" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h898a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="459" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="100.8" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="604.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview - MCP server exposing local, SSH and Docker logs to AI agents</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="50.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">Usage:</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="621.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview                       show this help (when run in a terminal)</tspan></text>
+<text x="18" y="159.0" xml:space="preserve" textLength="680.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview serve [--config FILE] run the MCP server (this is what agents start)</tspan></text>
+<text x="18" y="195.0" xml:space="preserve" textLength="84.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">Configure:</tspan></text>
+<text x="18" y="213.0" xml:space="preserve" textLength="756.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview configure             interactive setup: browse files/containers, add sources</tspan></text>
+<text x="18" y="231.0" xml:space="preserve" textLength="361.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview add local  --id ID --path FILE</tspan></text>
+<text x="18" y="249.0" xml:space="preserve" textLength="739.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview add ssh    --id ID --host H --user U --identity-file KEY --path REMOTE_FILE</tspan></text>
+<text x="18" y="267.0" xml:space="preserve" textLength="772.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview add docker --id ID --container NAME [--host H [--user U] [--identity-file KEY]]</tspan></text>
+<text x="18" y="285.0" xml:space="preserve" textLength="512.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview list                  show the effective sources</tspan></text>
+<text x="18" y="303.0" xml:space="preserve" textLength="747.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview enable|disable ID...  switch sources on/off without deleting them (or --all)</tspan></text>
+<text x="18" y="321.0" xml:space="preserve" textLength="420.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview remove ID             delete a source</tspan></text>
+<text x="18" y="339.0" xml:space="preserve" textLength="663.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview check [ID...]         test that sources are reachable and readable</tspan></text>
+<text x="18" y="357.0" xml:space="preserve" textLength="739.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview transport [--mode stdio|http|https-dev] [--host H] [--port N] [--new-token]</tspan></text>
+<text x="18" y="375.0" xml:space="preserve" textLength="882.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">                                   show or change how the server is reached (HTTP = one central instance)</tspan></text>
+<text x="18" y="393.0" xml:space="preserve" textLength="806.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview register [--run]      show (or run) how to register with Claude Code / other agents</tspan></text>
+<text x="18" y="411.0" xml:space="preserve" textLength="579.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview init [--force]        write an example ./mcplogview.json</tspan></text>
+<text x="18" y="429.0" xml:space="preserve" textLength="596.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview where                 print which config file is in effect</tspan></text>
+<text x="18" y="447.0" xml:space="preserve" textLength="168.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  mcplogview version</tspan></text>
+<text x="18" y="483.0" xml:space="preserve" textLength="462.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">Common flags: --config FILE   use/edit this config file</tspan></text>
+<text x="18" y="519.0" xml:space="preserve" textLength="277.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">Config lookup (first match wins):</tspan></text>
+<text x="18" y="537.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  1. --config FILE</tspan></text>
+<text x="18" y="555.0" xml:space="preserve" textLength="201.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">  2. $LOG_SOURCES_CONFIG</tspan></text>
+<text x="18" y="573.0" xml:space="preserve" textLength="596.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">  3. ./mcplogview.json                 (current directory, per project)</tspan></text>
+<text x="18" y="591.0" xml:space="preserve" textLength="420.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  4. ~/.config/mcplogview/config.json  (user-wide)</tspan></text>
+<text x="18" y="609.0" xml:space="preserve" textLength="420.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  5. built-in defaults (only the server's own log)</tspan></text>
+<text x="18" y="645.0" xml:space="preserve" textLength="756.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">HTTP mode (one central instance): mcplogview transport --mode http, then mcplogview serve.</tspan></text>
+<text x="18" y="663.0" xml:space="preserve" textLength="806.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">Network-facing modes require a bearer token (generated for you); $MCPLOGVIEW_TOKEN overrides it.</tspan></text>
+<text x="18" y="699.0" xml:space="preserve" textLength="663.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">A running server notices config changes within a few seconds (no restart), so a</tspan></text>
+<text x="18" y="717.0" xml:space="preserve" textLength="588.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">central instance always serves the sources that are currently enabled.</tspan></text>
+<text x="18" y="753.0" xml:space="preserve" textLength="789.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">Edit commands (add/remove/enable/disable/configure) write to the config found above, or create</tspan></text>
+<text x="18" y="771.0" xml:space="preserve" textLength="705.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">./mcplogview.json. Relative paths in a config resolve against that file's directory.</tspan></text>
+<text x="18" y="807.0" xml:space="preserve" textLength="109.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">Source types:</tspan></text>
+<text x="18" y="825.0" xml:space="preserve" textLength="268.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">  local   a file on this machine</tspan></text>
+<text x="18" y="843.0" xml:space="preserve" textLength="798.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">  ssh     a file on a remote host (system ssh, BatchMode: key or ssh-agent, no password prompt)</tspan></text>
+<text x="18" y="861.0" xml:space="preserve" textLength="781.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">  docker  a container's logs, local or on a remote host over ssh (needs the docker CLI there)</tspan></text>
+<text x="18" y="897.0" xml:space="preserve" textLength="672.0" lengthAdjust="spacing"><tspan fill="#c9d1d9">In stdio mode stdout carries MCP JSON-RPC only; diagnostics go to stderr and the</tspan></text>
+<text x="18" y="915.0" xml:space="preserve" textLength="562.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">self-log (default ~/.local/state/mcplogview/mcplogview-server.log).</tspan></text>
+<text x="18" y="933.0" xml:space="preserve" textLength="529.2" lengthAdjust="spacing"><tspan fill="#c9d1d9">MCP tools: list_logs, get_log_skill, read_log_chunk, follow_log</tspan></text>
+</svg>

@@ -1,0 +1,5 @@
+{
+  "sources": [
+    { "id": "app", "label": "App log", "path": "logs/app.log" }
+  ]
+}

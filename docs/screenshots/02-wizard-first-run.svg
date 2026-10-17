@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="498" height="200" viewBox="0 0 498 200" role="img" aria-label="mcplogview configure">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="498" height="200" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h478a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="249" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview configure</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="361.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#5f5fd7" font-weight="bold">No config file yet. Where should it live?</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="445.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#ff87d7">&gt; </tspan><tspan fill="#00af87">This project: /home/dev/work/shop/mcplogview.json</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="462.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">User-wide: /home/dev/.config/mcplogview/config.json</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="141.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="177.0" xml:space="preserve" textLength="327.6" lengthAdjust="spacing"><tspan fill="#626262">↑</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">up</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">↓</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">down</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">/</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">filter</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">submit</tspan></text>
+</svg>

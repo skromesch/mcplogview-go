@@ -1,0 +1,10 @@
+/dist/
+/mcplogview
+/mcplogview.json
+*.log
+.codegraph/
+__pycache__/
+*.pyc
+
+# local deployment
+.env

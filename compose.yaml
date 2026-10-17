@@ -1,0 +1,68 @@
+# mcplogview as one central HTTP instance. See docs/docker.md.
+#
+#   cp .env.example .env        # set MCPLOGVIEW_TOKEN
+#   docker compose up -d --build
+#   docker compose --profile docker up -d --build    # also allow reading Docker container logs
+#
+name: mcplogview
+
+services:
+  mcplogview:
+    build:
+      context: .
+      args:
+        VERSION: ${MCPLOGVIEW_VERSION:-dev}
+        # Linux: set to your own uid (id -u) so files you own in ./deploy/docker are readable.
+        UID: ${MCPLOGVIEW_UID:-10001}
+    image: mcplogview:${MCPLOGVIEW_VERSION:-dev}
+    restart: unless-stopped
+    environment:
+      # The container listens on 0.0.0.0, so a token is mandatory.
+      MCPLOGVIEW_TOKEN: "${MCPLOGVIEW_TOKEN:?Set MCPLOGVIEW_TOKEN in .env (min 16 chars, e.g. from openssl rand -base64 24)}"
+      # Used by `docker` sources; only works with `--profile docker` (see docker-proxy below).
+      DOCKER_HOST: tcp://docker-proxy:2375
+    ports:
+      # Loopback only by default. Put MCPLOGVIEW_BIND=0.0.0.0 in .env to serve the network.
+      - "${MCPLOGVIEW_BIND:-127.0.0.1}:${MCPLOGVIEW_PORT:-3333}:3333"
+    volumes:
+      # Config: mcplogview.json + log-skills/. A directory, not the single file: `configure` and
+      # `add` replace the file atomically, which a single-file bind mount does not allow.
+      - ${MCPLOGVIEW_CONFIG:-./deploy/docker/config}:/config
+      - mcplogview-data:/data                               # the server's own log
+      - ${MCPLOGVIEW_LOGS:-./deploy/docker/logs}:/logs:ro   # local log files to expose
+      # ssh sources: private keys (use --identity-file '~/.ssh/keys/<name>', read-only) and the known_hosts
+      # file (writable: ssh records the host keys of new hosts there, so they survive restarts).
+      - ${MCPLOGVIEW_SSH_KEYS:-./deploy/docker/ssh/keys}:/home/mcplogview/.ssh/keys:ro
+      - ${MCPLOGVIEW_KNOWN_HOSTS:-./deploy/docker/ssh/known_hosts}:/home/mcplogview/.ssh/known_hosts
+    healthcheck:
+      test: ["CMD", "nc", "-z", "127.0.0.1", "3333"]
+      interval: 15s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    depends_on:
+      docker-proxy:
+        condition: service_started
+        required: false
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+
+  # Read-only window onto the Docker API for `docker` sources. Only the container
+  # endpoints are enabled (GET); POST (start/stop/exec/...) stays denied, so
+  # mcplogview can read logs but cannot control containers.
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy:v0.5.0
+    profiles: ["docker"]
+    restart: unless-stopped
+    environment:
+      CONTAINERS: 1
+      POST: 0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+volumes:
+  mcplogview-data:

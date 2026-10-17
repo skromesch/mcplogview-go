@@ -1,0 +1,57 @@
+{
+  "transport": {
+    "mode": "stdio"
+  },
+  "logging": {
+    "enabled": true,
+    "debug": false,
+    "path": "~/.local/state/mcplogview/mcplogview-server.log",
+    "maxFileSize": 10485760,
+    "maxBackups": 5
+  },
+  "skillsDir": "log-skills",
+  "sources": [
+    {
+      "type": "local",
+      "id": "app",
+      "label": "Application log",
+      "description": "Main backend service log",
+      "hint": "Start with ERROR lines.",
+      "path": "logs/app.log"
+    },
+    {
+      "type": "ssh",
+      "id": "prod-api",
+      "label": "Prod API log",
+      "description": "Production API, remote file",
+      "host": "prod-api",
+      "port": 22,
+      "user": "ubuntu",
+      "identityFile": "~/.ssh/id_ed25519",
+      "strictHostKeyChecking": true,
+      "path": "/var/log/myapp/api.log"
+    },
+    {
+      "type": "docker",
+      "id": "shop-api",
+      "label": "Shop API container",
+      "container": "shop-api"
+    },
+    {
+      "type": "docker",
+      "id": "prod-worker",
+      "label": "Prod worker container",
+      "container": "worker",
+      "host": "prod-api",
+      "user": "ubuntu",
+      "identityFile": "~/.ssh/id_ed25519"
+    },
+    {
+      "type": "local",
+      "id": "old-service",
+      "label": "Old service (switched off)",
+      "path": "/var/log/old-service.log",
+      "disabled": true
+    }
+  ]
+}

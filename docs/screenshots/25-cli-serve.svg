@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="767" height="146" viewBox="0 0 767 146" role="img" aria-label="mcplogview serve">
+<style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
+<rect width="767" height="146" rx="10" fill="#0d1117"/>
+<path d="M0 10a10 10 0 0 1 10-10h747a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
+<circle cx="18" cy="19" r="6" fill="#ff5f56"/>
+<circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
+<circle cx="58" cy="19" r="6" fill="#27c93f"/>
+<text x="383" y="24" text-anchor="middle" fill="#8b949e" style="font-size:13px">mcplogview serve</text>
+<text x="18" y="69.0" xml:space="preserve" textLength="151.2" lengthAdjust="spacing"><tspan fill="#3fb950" font-weight="bold">$</tspan><tspan fill="#c9d1d9"> mcplogview serve</tspan></text>
+<text x="18" y="87.0" xml:space="preserve" textLength="621.6" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview: config /home/dev/work/shop/mcplogview.json (current directory)</tspan></text>
+<text x="18" y="105.0" xml:space="preserve" textLength="638.4" lengthAdjust="spacing"><tspan fill="#c9d1d9">mcplogview: log file /home/dev/.local/state/mcplogview/mcplogview-server.log</tspan></text>
+<text x="18" y="123.0" xml:space="preserve" textLength="730.8" lengthAdjust="spacing"><tspan fill="#c9d1d9">MCP Streamable HTTP listening on http://0.0.0.0:38333/mcp (auth: bearer token required)</tspan></text>
+</svg>
