@@ -82,7 +82,7 @@ else
   url="$BASE_URL/download/$version"
 fi
 
-archive="${BIN}_${os}_${arch}.tar.gz"
+archive="${REPO##*/}_${os}_${arch}.tar.gz" # GoReleaser names archives after the project
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT INT TERM
 
