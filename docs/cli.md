@@ -6,7 +6,7 @@ mcplogview serve                 run the MCP server
 mcplogview configure             interactive setup
 mcplogview add local|ssh|docker  add a source
 mcplogview list                  show the effective sources
-mcplogview enable|disable        switch sources on/off
+mcplogview enable|disable        switch sources or plugins on/off
 mcplogview remove                delete a source
 mcplogview check                 test sources
 mcplogview transport             show/change stdio or HTTP mode
@@ -85,11 +85,13 @@ Prints id, state (`on`/`off`), type, label and location of every source.
 ## `enable`, `disable`
 
 ```
-mcplogview enable  ID... | --all [--config FILE]        (alias: on)
-mcplogview disable ID... | --all [--config FILE]        (alias: off)
+mcplogview enable  NAME... | --all [--config FILE]      (alias: on)
+mcplogview disable NAME... | --all [--config FILE]      (alias: off)
 ```
 
-Switches sources on or off without deleting them. Disabled sources are invisible to agents.
+Switches sources (by id) or plugins (by name) on or off without deleting them. Disabled sources are invisible to
+agents; disabled plugins are not loaded (`"enabled": false` in the plugin entry). A name used by both a source and
+a plugin is refused. `--all` switches every source, never plugins.
 
 ## `remove`
 

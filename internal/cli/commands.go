@@ -417,7 +417,7 @@ func runToggle(args []string, disable bool, stdout, stderr io.Writer) int {
 		verb = "disable"
 	}
 	fs, configPath := newFlags(verb, stderr)
-	all := fs.Bool("all", false, verb+" every source")
+	all := fs.Bool("all", false, verb+" every source (plugins are only switched by name)")
 	var ids []string
 	rest := args
 	for len(rest) > 0 {
@@ -431,7 +431,7 @@ func runToggle(args []string, disable bool, stdout, stderr io.Writer) int {
 		rest = fs.Args()[1:]
 	}
 	if len(ids) == 0 && !*all {
-		fmt.Fprintf(stderr, "usage: mcplogview %s ID... | --all  [--config FILE]\n", verb)
+		fmt.Fprintf(stderr, "usage: mcplogview %s NAME... | --all  [--config FILE]\n", verb)
 		return 2
 	}
 
@@ -451,7 +451,7 @@ func runToggle(args []string, disable bool, stdout, stderr io.Writer) int {
 		}
 	}
 	for _, id := range ids {
-		if err := file.SetDisabled(id, disable); err != nil {
+		if err := toggleOne(file, id, disable); err != nil {
 			fmt.Fprintf(stderr, "mcplogview: %v in %s\n", err, target)
 			return 1
 		}
@@ -462,4 +462,19 @@ func runToggle(args []string, disable bool, stdout, stderr io.Writer) int {
 	}
 	fmt.Fprintf(stdout, "%sd %s in %s\n", verb, strings.Join(ids, ", "), target)
 	return 0
+}
+
+// toggleOne switches the source or plugin called name. A name used by both is
+// refused rather than guessed.
+func toggleOne(file *configure.File, name string, disable bool) error {
+	isSource, isPlugin := file.Find(name) >= 0, file.HasPlugin(name)
+	switch {
+	case isSource && isPlugin:
+		return fmt.Errorf("%q is both a source and a plugin; rename one of them", name)
+	case isPlugin:
+		return file.SetPluginEnabled(name, !disable)
+	case isSource:
+		return file.SetDisabled(name, disable)
+	}
+	return fmt.Errorf("no source or plugin named %q", name)
 }

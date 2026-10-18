@@ -23,7 +23,8 @@ Configure:
   mcplogview add ssh    --id ID --host H --user U --identity-file KEY --path REMOTE_FILE
   mcplogview add docker --id ID --container NAME [--host H [--user U] [--identity-file KEY]]
   mcplogview list                  show the effective sources
-  mcplogview enable|disable ID...  switch sources on/off without deleting them (or --all)
+  mcplogview enable|disable NAME   switch sources or plugins on/off without deleting them
+                                   (several names allowed; --all: every source)
   mcplogview remove ID             delete a source
   mcplogview check [ID...]         test that sources are reachable and readable
   mcplogview transport [--mode stdio|http|https-dev] [--host H] [--port N] [--new-token]

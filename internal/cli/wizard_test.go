@@ -52,7 +52,7 @@ func TestWizardAddLocalFileThroughBrowser(t *testing.T) {
 		"",        // label: default
 		"my logs", // description
 		"",        // hint
-		"7",       // menu: quit (add, toggle, remove, test, server, register, quit)
+		"8",       // menu: quit (add, toggle, remove, test, server, register, plugins, quit)
 	))
 	if code != 0 {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -93,7 +93,7 @@ func TestWizardRejectsDuplicateIDAndOffersSaveAnywayForBadSource(t *testing.T) {
 		"",  // label
 		"",  // description
 		"",  // hint
-		"7", // quit
+		"8", // quit
 	))
 	if code != 0 || !strings.Contains(out, "Editing ") {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -120,7 +120,7 @@ func TestWizardUnreachableSourceNotSavedUnlessConfirmed(t *testing.T) {
 		"",                     // description
 		"",                     // hint
 		"n",                    // save anyway? no
-		"4",                    // menu: quit (add, server, register, quit)
+		"5",                    // menu: quit (add, server, register, plugins, quit)
 	))
 	if code != 0 || !strings.Contains(out, "✗") {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -197,7 +197,7 @@ func TestWizardAddsDockerContainerFromList(t *testing.T) {
 		"",                // label
 		"",                // description
 		"",                // hint
-		"7",               // quit
+		"8",               // quit
 	))
 	if code != 0 || !strings.Contains(out, "✓ reachable and readable") {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -222,7 +222,7 @@ func TestWizardTogglesSources(t *testing.T) {
 
 	// menu: 2 = "Switch sources on / off". Plain mode toggles one number per
 	// prompt and ends with 0: switch a off (1), b on (2).
-	code, out := runWizard(t, answers("2", "1", "2", "0", "7"))
+	code, out := runWizard(t, answers("2", "1", "2", "0", "8"))
 	if code != 0 {
 		t.Fatalf("exit %d\n%s", code, out)
 	}
@@ -245,7 +245,7 @@ func TestWizardToggleWithoutChangesWritesNothing(t *testing.T) {
 	orig := `{"sources":[{"id":"a","label":"A","path":"/etc/hosts"}]}`
 	_ = os.WriteFile(p, []byte(orig), 0o644)
 
-	code, out := runWizard(t, answers("2", "0", "7"))
+	code, out := runWizard(t, answers("2", "0", "8"))
 	if code != 0 || !strings.Contains(out, "(no changes)") {
 		t.Fatalf("exit %d\n%s", code, out)
 	}
@@ -275,7 +275,7 @@ func TestToggleFieldRendersEverySource(t *testing.T) {
 
 func TestWizardServerModeHTTP(t *testing.T) {
 	work := sandbox(t)
-	// no sources: menu = 1 add, 2 server mode, 3 register, 4 quit
+	// no sources: menu = 1 add, 2 server mode, 3 register, 4 plugins, 5 quit
 	code, out := runWizard(t, answers(
 		"1",    // scope: project
 		"2",    // server mode
@@ -284,7 +284,7 @@ func TestWizardServerModeHTTP(t *testing.T) {
 		"4567", // port
 		"",     // path: default
 		"1",    // token: generate
-		"4",    // quit
+		"5",    // quit
 	))
 	if code != 0 {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -314,7 +314,7 @@ func TestWizardNetworkWithoutTokenNeedsConfirmation(t *testing.T) {
 		"2", // token: none
 		"n", // really expose without token? no -> asked again
 		"1", // token: generate
-		"4", // quit
+		"5", // quit
 	))
 	if code != 0 {
 		t.Fatalf("exit %d\n%s", code, out)
@@ -339,5 +339,38 @@ func TestBrowseStartDirEnvOverride(t *testing.T) {
 	}
 	if got := browseStartDir(true); got != "/var/log" {
 		t.Fatalf("the override must not leak to remote browsing, got %s", got)
+	}
+}
+
+func TestWizardPluginsListAndToggle(t *testing.T) {
+	work := sandbox(t)
+	p := filepath.Join(work, config.LocalConfigName)
+	_ = os.WriteFile(p, []byte(`{"sources":[{"id":"a","label":"A","path":"/etc/hosts"}],
+		"plugins":[{"name":"one"},{"name":"two","enabled":false}]}`), 0o644)
+
+	// menu 7 = plugins; sub-menu: 1 list, 4 switch on/off (toggle one off,
+	// two on), 5 back; then 8 quit
+	code, out := runWizard(t, answers("7", "1", "4", "1", "2", "0", "5", "8"))
+	if code != 0 {
+		t.Fatalf("exit %d\n%s", code, out)
+	}
+	if !strings.Contains(out, "NAME") || !strings.Contains(out, "load error") || !strings.Contains(out, "✓ saved") {
+		t.Fatalf("expected the plugin list and a save:\n%s", out)
+	}
+	cfg, err := config.Load(p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.Plugins[0].IsEnabled() || !cfg.Plugins[1].IsEnabled() {
+		data, _ := os.ReadFile(p)
+		t.Fatalf("expected one off and two on:\n%s", data)
+	}
+}
+
+func TestWizardPluginsWithoutPlugins(t *testing.T) {
+	sandbox(t)
+	code, out := runWizard(t, answers("1", "4", "5")) // scope, plugins, quit
+	if code != 0 || !strings.Contains(out, "No plugins configured") {
+		t.Fatalf("exit %d\n%s", code, out)
 	}
 }

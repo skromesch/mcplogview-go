@@ -63,17 +63,11 @@ func runPlugin(args []string, stdout, stderr io.Writer) int {
 		return pluginTest(args, runPattern, stdout, stderr)
 	}
 
-	cwd, _ := os.Getwd()
-	cfg, path, _, err := config.LoadEffective(*configPath, os.Getenv, cwd)
+	m, err := newPluginManager(*configPath, stdout)
 	if err != nil {
 		fmt.Fprintln(stderr, "mcplogview:", err)
 		return 1
 	}
-	base := cwd
-	if path != "" {
-		base = filepath.Dir(absPath(path))
-	}
-	m := &pluginmgr.Manager{Config: cfg, LockPath: filepath.Join(base, pluginmgr.LockFile), Out: stdout}
 
 	switch sub {
 	case "sync":
@@ -88,6 +82,21 @@ func runPlugin(args []string, stdout, stderr io.Writer) int {
 		return 1
 	}
 	return 0
+}
+
+// newPluginManager loads the effective config (configPath may be empty) and
+// returns a plugin manager whose lock file sits next to that config.
+func newPluginManager(configPath string, out io.Writer) (*pluginmgr.Manager, error) {
+	cwd, _ := os.Getwd()
+	cfg, path, _, err := config.LoadEffective(configPath, os.Getenv, cwd)
+	if err != nil {
+		return nil, err
+	}
+	base := cwd
+	if path != "" {
+		base = filepath.Dir(absPath(path))
+	}
+	return &pluginmgr.Manager{Config: cfg, LockPath: filepath.Join(base, pluginmgr.LockFile), Out: out}, nil
 }
 
 // pluginTest runs a plugin's Lua tests; exit 1 on any failure.

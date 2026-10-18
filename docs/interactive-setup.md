@@ -118,3 +118,12 @@ More in [HTTP mode](http-mode.md).
 - **Test all sources** reads each one and reports ok / FAIL with the reason (same as `mcplogview check`).
 - **How to register with Claude Code / other agents** prints the registration command (same as
   `mcplogview register`).
+
+## Plugins
+
+**Plugins: list, sync, update, switch on / off** opens a sub-menu for the plugins in the config file
+(see [Lua plugins](plugins.md)):
+
+- **List** shows the same table as `mcplogview plugin list` (enabled, git@ref, locked and installed commit, state, load status).
+- **Sync** runs `mcplogview plugin sync` for all plugins; **Update** runs `sync --update` for all or one chosen plugin.
+- **Switch plugins on / off** works like the source toggle and sets `"enabled"` in the plugin entry, keeping the rest of it.

@@ -2,6 +2,7 @@ package cli
 
 import (
 	"bufio"
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -18,6 +19,7 @@ import (
 	"github.com/skromesch/mcplogview-go/internal/config"
 	"github.com/skromesch/mcplogview-go/internal/configure"
 	"github.com/skromesch/mcplogview-go/internal/logs"
+	"github.com/skromesch/mcplogview-go/internal/pluginmgr"
 )
 
 var idPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.-]*$`)
@@ -233,6 +235,7 @@ func (w *wizard) menu() error {
 		opts = append(opts,
 			choice{"Server mode: stdio or HTTP (one central instance)", "server"},
 			choice{"How to register with Claude Code / other agents", "register"},
+			choice{"Plugins: list, sync, update, switch on / off", "plugins"},
 			choice{"Quit", "quit"})
 
 		v, err := w.ui.selectOne("What next?", "Ctrl+C quits here; inside a flow it goes back to this menu", opts, false)
@@ -252,6 +255,8 @@ func (w *wizard) menu() error {
 			err = w.serverMode()
 		case "register":
 			runRegister([]string{"--config", w.file.Path}, w.ui.out, w.stderr)
+		case "plugins":
+			err = w.plugins()
 		case "quit":
 			return nil
 		}
@@ -648,29 +653,43 @@ func (w *wizard) checkAll() {
 	}
 }
 
-// newToggleField builds the on/off multi-select for the given sources and
-// returns it with the slice that receives the ids that stay ON.
-func newToggleField(sources []config.Source) (*huh.MultiSelect[string], *[]string) {
-	opts := make([]huh.Option[string], 0, len(sources))
+// toggleItem is one row of an on/off multi-select.
+type toggleItem struct {
+	label, value string
+	on           bool
+}
+
+// newOnOffField builds an on/off multi-select and returns it with the slice
+// that receives the values that stay ON.
+func newOnOffField(title, desc string, items []toggleItem) (*huh.MultiSelect[string], *[]string) {
+	opts := make([]huh.Option[string], 0, len(items))
 	picked := []string{}
-	for _, s := range sources {
-		opts = append(opts, huh.NewOption(fmt.Sprintf("%-18s %-7s %s", s.ID, s.Type, Describe(s)), s.ID))
-		if !s.Disabled {
-			picked = append(picked, s.ID)
+	for _, it := range items {
+		opts = append(opts, huh.NewOption(it.label, it.value))
+		if it.on {
+			picked = append(picked, it.value)
 		}
 	}
 	// Without an explicit height the option list collapses to nothing (the
 	// user sees an empty box), so size it to the content: the title and
-	// description lines plus one row per source, capped for long lists.
+	// description lines plus one row per item, capped for long lists.
 	height := len(opts) + 4
 	if height > 20 {
 		height = 20
 	}
-	ms := huh.NewMultiSelect[string]().
-		Title("Which sources should be ON?").
-		Description("space (or x) toggles, enter confirms. Off sources stay in the file but agents cannot see them.").
+	ms := huh.NewMultiSelect[string]().Title(title).Description(desc).
 		Options(opts...).Value(&picked).Height(height)
 	return ms, &picked
+}
+
+// newToggleField builds the on/off multi-select for the given sources.
+func newToggleField(sources []config.Source) (*huh.MultiSelect[string], *[]string) {
+	items := make([]toggleItem, 0, len(sources))
+	for _, s := range sources {
+		items = append(items, toggleItem{fmt.Sprintf("%-18s %-7s %s", s.ID, s.Type, Describe(s)), s.ID, !s.Disabled})
+	}
+	return newOnOffField("Which sources should be ON?",
+		"space (or x) toggles, enter confirms. Off sources stay in the file but agents cannot see them.", items)
 }
 
 // toggleSources lets the user pick which configured sources are switched on.
@@ -815,4 +834,106 @@ func (w *wizard) chooseToken(cur config.Transport, listenHost string) (string, e
 		}
 	}
 	return v, nil
+}
+
+// plugins is the plugin sub-menu: list, sync, update and switch on / off.
+func (w *wizard) plugins() error {
+	for {
+		ps, err := w.file.Plugins()
+		if err != nil {
+			return err
+		}
+		if len(ps) == 0 {
+			w.ui.printf("\nNo plugins configured in %s. Add them under \"plugins\" (see docs/plugins.md).\n", w.file.Path)
+			return nil
+		}
+		v, err := w.ui.selectOne("Plugins", "", []choice{
+			{"List plugins (install state, whether they load)", "list"},
+			{"Sync: install / check out the locked commits", "sync"},
+			{"Update: move to the latest commit of \"ref\" and re-lock", "update"},
+			{"Switch plugins on / off", "toggle"},
+			{"« back to menu", "back"},
+		}, false)
+		if err != nil {
+			return err
+		}
+		switch v {
+		case "back":
+			return nil
+		case "list":
+			w.pluginRun(func(m *pluginmgr.Manager) error { return pluginList(m, w.ui.out) })
+		case "sync":
+			w.pluginRun(func(m *pluginmgr.Manager) error { return m.Sync(context.Background(), nil, false) })
+		case "update":
+			opts := []choice{{"All plugins", "*all"}}
+			for _, p := range ps {
+				opts = append(opts, choice{p.Name, p.Name})
+			}
+			opts = append(opts, choice{"« back", "back"})
+			name, err := w.ui.selectOne("Update which plugin?", "", opts, false)
+			if err != nil {
+				return err
+			}
+			if name == "back" {
+				continue
+			}
+			var names []string
+			if name != "*all" {
+				names = []string{name}
+			}
+			w.pluginRun(func(m *pluginmgr.Manager) error { return m.Sync(context.Background(), names, true) })
+		case "toggle":
+			if err := w.togglePlugins(ps); err != nil {
+				return err
+			}
+		}
+	}
+}
+
+// pluginRun runs fn with a plugin manager for the edited config and reports
+// errors without leaving the menu.
+func (w *wizard) pluginRun(fn func(*pluginmgr.Manager) error) {
+	m, err := newPluginManager(w.file.Path, w.ui.out)
+	if err == nil {
+		err = fn(m)
+	}
+	if err != nil {
+		w.ui.printf("✗ %v\n", err)
+	}
+}
+
+// togglePlugins lets the user pick which configured plugins are switched on.
+func (w *wizard) togglePlugins(ps []configure.PluginState) error {
+	items := make([]toggleItem, 0, len(ps))
+	for _, p := range ps {
+		items = append(items, toggleItem{p.Name, p.Name, p.Enabled})
+	}
+	ms, pickedPtr := newOnOffField("Which plugins should be ON?",
+		"space (or x) toggles, enter confirms. Off plugins stay in the file but are not loaded.", items)
+	if err := w.ui.run(ms); err != nil {
+		return err
+	}
+	on := map[string]bool{}
+	for _, n := range *pickedPtr {
+		on[n] = true
+	}
+	changed := 0
+	for _, p := range ps {
+		if p.Enabled == on[p.Name] {
+			continue
+		}
+		if err := w.file.SetPluginEnabled(p.Name, on[p.Name]); err != nil {
+			return err
+		}
+		changed++
+	}
+	if changed == 0 {
+		w.ui.printf("(no changes)\n")
+		return nil
+	}
+	if err := w.file.Save(); err != nil {
+		return err
+	}
+	w.ui.printf("✓ saved. A running mcplogview reloads plugins within a few seconds.\n")
+	return nil
 }

@@ -122,3 +122,31 @@ test.case("bad", function() test.eq(1, 2) end)
 		t.Fatalf("no tests: code=%d err=%q", code, errOut)
 	}
 }
+
+func TestEnableDisablePlugins(t *testing.T) {
+	work := sandbox(t)
+	p := filepath.Join(work, "mcplogview.json")
+	_ = os.WriteFile(p, []byte(`{"sources":[{"id":"s","label":"S","path":"/etc/hosts"},{"id":"both","label":"B","path":"/etc/hosts"}],
+		"plugins":[{"name":"demo","ref":"main"},{"name":"both"}]}`), 0o644)
+
+	if code, out, errOut := run(t, "disable", "demo", "s"); code != 0 {
+		t.Fatalf("%d %q %q", code, out, errOut)
+	}
+	data, _ := os.ReadFile(p)
+	if !strings.Contains(string(data), `"enabled": false`) || !strings.Contains(string(data), `"disabled": true`) {
+		t.Fatalf("%s", data)
+	}
+	if code, _, errOut := run(t, "enable", "demo"); code != 0 {
+		t.Fatalf("%d %q", code, errOut)
+	}
+	data, _ = os.ReadFile(p)
+	if !strings.Contains(string(data), `"enabled": true`) {
+		t.Fatalf("%s", data)
+	}
+	if code, _, errOut := run(t, "disable", "both"); code != 1 || !strings.Contains(errOut, "both a source and a plugin") {
+		t.Fatalf("%d %q", code, errOut)
+	}
+	if code, _, errOut := run(t, "disable", "ghost"); code != 1 || !strings.Contains(errOut, "no source or plugin") {
+		t.Fatalf("%d %q", code, errOut)
+	}
+}

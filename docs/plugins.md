@@ -78,7 +78,7 @@ Two top-level keys in the [config file](configuration.md):
 | Key | Default | Meaning |
 |-----|---------|---------|
 | `name` | required | Plugin name: lowercase letters, digits, `_`, `-`, starting with a letter or digit. Must be unique. It selects the file (`<name>.lua` / `<name>/init.lua`) |
-| `enabled` | `true` | `false` keeps the entry in the config but does not load the plugin |
+| `enabled` | `true` | `false` keeps the entry in the config but does not load the plugin (`mcplogview enable/disable NAME` or `mcplogview configure` → Plugins switch it) |
 | `allow` | `[]` | Capabilities granted to the plugin: `"ssh"` and/or `"fs"`. Anything else is rejected. Without a capability, the matching `mcp.ssh` / `mcp.fs` does not exist for the plugin |
 | `ssh` | none | Required when `allow` contains `"ssh"`, see below |
 | `fs` | none | Required when `allow` contains `"fs"`, see below |
@@ -112,7 +112,8 @@ roots must not collide with) by reloading all plugins; other config changes leav
 
 ## Installing plugins from git
 
-A `plugins[]` entry can name a git repository instead of relying on files you copied by hand:
+A `plugins[]` entry can name a git repository instead of relying on files you copied by hand (the
+`mcplogview configure` wizard's Plugins menu offers list, sync and update too):
 
 ```text
 { "name": "hello", "git": "https://example.com/you/mcplogview-hello.git", "ref": "v1.0.0",
