@@ -1,0 +1,15 @@
+{
+  "transport": {
+    "mode": "http",
+    "authToken": "change-me-to-a-long-random-token"
+  },
+  "sources": [
+    {
+      "type": "docker",
+      "id": "postgres",
+      "label": "PostgreSQL",
+      "description": "PostgreSQL container log",
+      "container": "postgres"
+    }
+  ]
+}

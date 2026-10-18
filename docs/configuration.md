@@ -39,6 +39,11 @@ A path given explicitly (1, 2) that does not exist is an error, not a silent fal
 
 Everything not mentioned has a default, so this is a complete, working config.
 
+## HTTP with a Docker container
+
+A local HTTP instance (listening on the loopback default) serving one container's log:
+[`examples/http-docker.json`](examples/http-docker.json), checked by the project's tests.
+
 ## A config using everything
 
 [`examples/full.json`](examples/full.json), checked by the project's tests:
