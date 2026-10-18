@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/skromesch/mcplogview-go/internal/buildinfo"
 	"github.com/skromesch/mcplogview-go/internal/config"
 	"github.com/skromesch/mcplogview-go/internal/logs"
+	"github.com/skromesch/mcplogview-go/internal/plugin"
 	"github.com/skromesch/mcplogview-go/internal/serverlog"
 	"github.com/skromesch/mcplogview-go/internal/skills"
 )
@@ -20,8 +22,12 @@ import (
 // Runtime is everything the tool handlers need. Sources and skills settings
 // can be swapped at runtime (config hot reload) without restarting.
 type Runtime struct {
-	Logger serverlog.Logger
-	state  atomic.Pointer[runtimeState]
+	Logger  serverlog.Logger
+	state   atomic.Pointer[runtimeState]
+	plugins *plugin.Host
+
+	applyMu sync.Mutex
+	sig     *pluginSig // plugin settings of the previous Apply
 }
 
 type runtimeState struct {
@@ -31,13 +37,18 @@ type runtimeState struct {
 
 // NewRuntime builds a Runtime serving the enabled sources of cfg.
 func NewRuntime(cfg config.Config, logger serverlog.Logger) *Runtime {
-	rt := &Runtime{Logger: logger}
+	rt := &Runtime{Logger: logger, plugins: plugin.NewHost(plugin.Options{Logger: logger, ReservedToolNames: ToolNames})}
 	rt.Apply(cfg)
 	return rt
 }
 
-// Apply swaps in a new configuration (only sources and skills are affected).
+// Apply swaps in a new configuration (sources, skills and plugins are
+// affected). Plugins are reloaded only when their settings or the set of
+// configured source ids changed.
 func (rt *Runtime) Apply(cfg config.Config) {
+	rt.applyMu.Lock()
+	defer rt.applyMu.Unlock()
+	rt.reloadPlugins(cfg)
 	rt.state.Store(&runtimeState{cfg: cfg, reg: logs.NewRegistry(cfg.EnabledSources())})
 }
 
@@ -52,17 +63,19 @@ type unknownSourceError struct{ id string }
 func (e unknownSourceError) Error() string { return "unknown source: " + e.id }
 
 type (
-	listInput  struct{}
+	listInput struct {
+		Parent *string `json:"parent,omitempty" jsonschema:"id of an expandable plugin source whose children to list; omit for the top level"`
+	}
 	skillInput struct {
-		SourceID string `json:"sourceId" jsonschema:"id of a configured log source"`
+		SourceID string `json:"sourceId" jsonschema:"a log source id from list_logs; plugin sources use ids like root/part/part found via list_logs parent=<id>"`
 	}
 	readInput struct {
-		SourceID string  `json:"sourceId" jsonschema:"id of a configured log source"`
-		Cursor   *string `json:"cursor,omitempty" jsonschema:"cursor returned by a previous call; omit to start from the beginning"`
+		SourceID string  `json:"sourceId" jsonschema:"a log source id from list_logs; plugin sources use ids like root/part/part found via list_logs parent=<id>"`
+		Cursor   *string `json:"cursor,omitempty" jsonschema:"cursor returned by a previous call; omit to start from the beginning (a plugin source may start elsewhere, see its skill)"`
 		MaxLines *int    `json:"maxLines,omitempty" jsonschema:"1..500, default 100"`
 	}
 	followInput struct {
-		SourceID       string  `json:"sourceId" jsonschema:"id of a configured log source"`
+		SourceID       string  `json:"sourceId" jsonschema:"a log source id from list_logs; plugin sources use ids like root/part/part found via list_logs parent=<id>"`
 		Cursor         *string `json:"cursor,omitempty" jsonschema:"cursor returned by a previous call"`
 		MaxLines       *int    `json:"maxLines,omitempty" jsonschema:"1..500, default 100"`
 		TimeoutMs      *int    `json:"timeoutMs,omitempty" jsonschema:"1..30000, default 5000"`
@@ -73,6 +86,10 @@ type (
 		Label       string `json:"label"`
 		Description string `json:"description,omitempty"`
 		Hint        string `json:"hint,omitempty"`
+		Leaf        bool   `json:"leaf,omitempty"`
+		Expandable  bool   `json:"expandable,omitempty"`
+		// Plugin names the plugin a source comes from (plugin sources only).
+		Plugin string `json:"plugin,omitempty"`
 	}
 )
 
@@ -83,37 +100,52 @@ var ToolNames = []string{"list_logs", "get_log_skill", "read_log_chunk", "follow
 func New(rt *Runtime) *mcp.Server {
 	srv := mcp.NewServer(&mcp.Implementation{Name: "mcplogview", Version: buildinfo.ShortVersion()}, nil)
 
-	mcp.AddTool(srv, &mcp.Tool{Name: "list_logs", Description: "List configured log sources"},
-		func(ctx context.Context, _ *mcp.CallToolRequest, _ listInput) (*mcp.CallToolResult, any, error) {
-			return rt.run("list_logs", "", func() (any, error) {
+	mcp.AddTool(srv, &mcp.Tool{Name: "list_logs", Description: "List log sources: configured ones and plugin sources (pass parent=<id> to list an expandable plugin source's children)"},
+		func(ctx context.Context, _ *mcp.CallToolRequest, in listInput) (*mcp.CallToolResult, any, error) {
+			return rt.run(ctx, "list_logs", parentCtx(in.Parent), func() (any, error) {
+				if parent := strOr(in.Parent); parent != "" {
+					entries, err := rt.pluginChildren(ctx, parent)
+					if err != nil {
+						return nil, err
+					}
+					return map[string]any{"logs": entries}, nil
+				}
 				entries := []logEntry{}
 				for _, s := range rt.Registry().List() {
 					entries = append(entries, logEntry{ID: s.ID, Label: s.Label, Description: s.Description, Hint: s.Hint})
 				}
+				entries = append(entries, rt.pluginEntries()...)
 				return map[string]any{"logs": entries}, nil
 			})
 		})
 
-	mcp.AddTool(srv, &mcp.Tool{Name: "get_log_skill", Description: "Get usage skill for a configured log source"},
+	mcp.AddTool(srv, &mcp.Tool{Name: "get_log_skill", Description: "Get usage skill for a log source (configured or plugin)"},
 		func(ctx context.Context, _ *mcp.CallToolRequest, in skillInput) (*mcp.CallToolResult, any, error) {
-			return rt.run("get_log_skill", "sourceId="+in.SourceID, func() (any, error) {
+			return rt.run(ctx, "get_log_skill", "sourceId="+in.SourceID, func() (any, error) {
 				src, ok := rt.Registry().Get(in.SourceID)
 				if !ok {
+					if rt.pluginSource(in.SourceID) {
+						return rt.pluginSkill(in.SourceID), nil
+					}
 					return nil, unknownSourceError{in.SourceID}
 				}
 				return skills.Load(src, rt.Config()), nil
 			})
 		})
 
-	mcp.AddTool(srv, &mcp.Tool{Name: "read_log_chunk", Description: "Read a chunk of lines from a configured log source"},
+	mcp.AddTool(srv, &mcp.Tool{Name: "read_log_chunk", Description: "Read a chunk of lines from a log source (configured or plugin)"},
 		func(ctx context.Context, _ *mcp.CallToolRequest, in readInput) (*mcp.CallToolResult, any, error) {
 			maxLines := intOr(in.MaxLines, 100)
-			return rt.run("read_log_chunk", fmt.Sprintf("sourceId=%s maxLines=%d", in.SourceID, maxLines), func() (any, error) {
+			return rt.run(ctx, "read_log_chunk", fmt.Sprintf("sourceId=%s maxLines=%d", in.SourceID, maxLines), func() (any, error) {
 				if err := inRange("maxLines", maxLines, 1, 500); err != nil {
 					return nil, err
 				}
 				src, ok := rt.Registry().Get(in.SourceID)
 				if !ok {
+					if rt.pluginSource(in.SourceID) {
+						c, err := rt.plugins.Read(ctx, in.SourceID, strOr(in.Cursor), maxLines)
+						return rt.markChunk(in.SourceID, c), err
+					}
 					return nil, unknownSourceError{in.SourceID}
 				}
 				return logs.ReadChunk(src, strOr(in.Cursor), maxLines)
@@ -126,7 +158,7 @@ func New(rt *Runtime) *mcp.Server {
 			timeoutMs := intOr(in.TimeoutMs, 5000)
 			pollMs := intOr(in.PollIntervalMs, 200)
 			ctxInfo := fmt.Sprintf("sourceId=%s maxLines=%d timeoutMs=%d pollIntervalMs=%d", in.SourceID, maxLines, timeoutMs, pollMs)
-			return rt.run("follow_log", ctxInfo, func() (any, error) {
+			return rt.run(ctx, "follow_log", ctxInfo, func() (any, error) {
 				for _, c := range []struct {
 					name      string
 					v, lo, hi int
@@ -137,42 +169,44 @@ func New(rt *Runtime) *mcp.Server {
 				}
 				src, ok := rt.Registry().Get(in.SourceID)
 				if !ok {
+					if rt.pluginSource(in.SourceID) {
+						read := func(cursor string) (logs.Chunk, error) {
+							return rt.plugins.Read(ctx, in.SourceID, cursor, maxLines)
+						}
+						c, err := followWith(ctx, read, strOr(in.Cursor), time.Duration(timeoutMs)*time.Millisecond, time.Duration(pollMs)*time.Millisecond)
+						return rt.markChunk(in.SourceID, c), err
+					}
 					return nil, unknownSourceError{in.SourceID}
 				}
 				return follow(ctx, src, strOr(in.Cursor), maxLines, time.Duration(timeoutMs)*time.Millisecond, time.Duration(pollMs)*time.Millisecond)
 			})
 		})
 
+	rt.plugins.SetSink(&toolSink{rt: rt, srv: srv})
 	return srv
 }
 
-// follow polls until lines show up or the timeout / request context ends.
+// follow polls a configured source until lines show up or the timeout /
+// request context ends.
 func follow(ctx context.Context, src config.Source, cursor string, maxLines int, timeout, poll time.Duration) (logs.Chunk, error) {
-	deadline := time.Now().Add(timeout)
-	for {
-		res, err := logs.ReadChunk(src, cursor, maxLines)
-		if err != nil {
-			return logs.Chunk{}, err
-		}
-		if len(res.Lines) > 0 {
-			return res, nil
-		}
-		cursor = res.Cursor
-		if !time.Now().Before(deadline) {
-			return logs.Chunk{Lines: []string{}, Cursor: cursor, EOF: true}, nil
-		}
-		select {
-		case <-ctx.Done():
-			return logs.Chunk{Lines: []string{}, Cursor: cursor, EOF: true}, nil
-		case <-time.After(poll):
-		}
-	}
+	return followWith(ctx, func(c string) (logs.Chunk, error) { return logs.ReadChunk(src, c, maxLines) }, cursor, timeout, poll)
 }
 
 // run logs the call and converts the result / error into an MCP tool result.
-func (rt *Runtime) run(tool, callCtx string, fn func() (any, error)) (*mcp.CallToolResult, any, error) {
+func (rt *Runtime) run(ctx context.Context, tool, callCtx string, fn func() (any, error)) (*mcp.CallToolResult, any, error) {
 	rt.Logger.Info(trimSpace("tool=" + tool + " " + callCtx))
+	if allow, name, reason := rt.plugins.CheckTool(ctx, tool, callCtx); !allow {
+		rt.Logger.Info(trimSpace("tool=" + tool + " denied by plugin " + name + " " + callCtx))
+		return &mcp.CallToolResult{
+			IsError: true,
+			Content: []mcp.Content{&mcp.TextContent{Text: fmt.Sprintf("Tool denied by plugin %s: %s", name, reason)}},
+		}, nil, nil
+	}
 	value, err := fn()
+	// after_tool runs in the background (it must not delay the response) and
+	// detached from ctx (a cancelled request still reports). err is the
+	// call's or the marshalling's error, read when this returns.
+	defer func() { rt.plugins.AfterToolAsync(ctx, tool, callCtx, err) }()
 	if err != nil {
 		rt.Logger.Error(trimSpace("tool="+tool+" failed "+callCtx), err)
 		return &mcp.CallToolResult{

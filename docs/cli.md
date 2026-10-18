@@ -11,6 +11,7 @@ mcplogview remove                delete a source
 mcplogview check                 test sources
 mcplogview transport             show/change stdio or HTTP mode
 mcplogview register              show/run the agent registration
+mcplogview plugin                sync | list | remove | test (Lua plugins)
 mcplogview init | where | version
 ```
 
@@ -130,6 +131,21 @@ Prints how to register this server with Claude Code and other MCP clients, for y
 or HTTP URL with the token header). `--run` runs `claude mcp add` instead of printing it.
 
 ![mcplogview register in HTTP mode](screenshots/24-cli-register.svg)
+
+## `plugin`
+
+```
+mcplogview plugin sync [--update] [NAME...] [--config FILE]
+mcplogview plugin list [--config FILE]
+mcplogview plugin remove NAME [--config FILE]
+mcplogview plugin test [-run REGEXP] DIR
+```
+
+`sync` installs the [plugins with a `git` URL](plugins.md#installing-plugins-from-git) and pins their commits in
+`plugins.lock.json` (`--update` moves to the latest of `ref`); `list` (alias `ls`) shows install states and whether
+each plugin loads; `remove` (alias `rm`) deletes an installed clone but not its config entry. `test` runs
+`DIR/tests/*_test.lua` (see [Testing plugins](plugins.md#testing-plugins)) and needs no config; exit code 1 if a
+case fails.
 
 ## `init`, `where`, `version`
 

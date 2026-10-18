@@ -96,6 +96,12 @@ in the log *after* a line with a newer timestamp. To never lose one, a read resu
 timestamp it saw and drops what it has already delivered (remembered by hashes of the last 64 lines). On a
 container logging hundreds of lines per second a resume can therefore repeat a few lines, but it will not skip any.
 
+## Plugin sources
+
+Besides these three types, an administrator can install [Lua plugins](plugins.md) that expose their own trees
+of logs. They are not listed in the config's `sources`; agents find them in `list_logs` (marked `expandable`)
+and browse them with `parent`.
+
 ## Checking sources
 
 ```bash

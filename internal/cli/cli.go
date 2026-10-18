@@ -29,6 +29,7 @@ Configure:
   mcplogview transport [--mode stdio|http|https-dev] [--host H] [--port N] [--new-token]
                                    show or change how the server is reached (HTTP = one central instance)
   mcplogview register [--run]      show (or run) how to register with Claude Code / other agents
+  mcplogview plugin sync|list|remove  install Lua plugins from git (see "mcplogview plugin")
   mcplogview init [--force]        write an example ./mcplogview.json
   mcplogview where                 print which config file is in effect
   mcplogview version
@@ -108,6 +109,8 @@ func Run(args []string, stdout, stderr io.Writer) int {
 		return runRegister(rest, stdout, stderr)
 	case "transport", "mode":
 		return runTransport(rest, stdout, stderr)
+	case "plugin", "plugins":
+		return runPlugin(rest, stdout, stderr)
 	case "configure", "config":
 		return runConfigure(rest, stdout, stderr)
 	}

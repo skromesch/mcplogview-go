@@ -1,0 +1,26 @@
+{
+  "pluginDirs": ["plugins"],
+  "plugins": [
+    {
+      "name": "hello",
+      "allow": ["fs"],
+      "fs": { "roots": ["/var/log/myapp"] },
+      "opts": { "dir": "/var/log/myapp" }
+    },
+    {
+      "name": "stations",
+      "git": "https://example.com/you/mcplogview-plugin-stations.git",
+      "ref": "v1.0.0",
+      "allow": ["ssh"],
+      "ssh": {
+        "allowedCIDRs": ["192.0.2.0/24"],
+        "user": "logreader",
+        "identityFile": "~/.ssh/stations_key"
+      },
+      "opts": {
+        "subnet": "192.0.2",
+        "logRoot": "/var/log/station"
+      }
+    }
+  ]
+}

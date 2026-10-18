@@ -32,7 +32,7 @@ func probeScript(src config.Source, script string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), sshTimeout)
 	defer cancel()
 
-	out, err := runScript(ctx, src, script)
+	out, err := RunScript(ctx, src, script)
 	if bytes.HasPrefix(out, []byte(errPrefix)) {
 		if src.Type == config.SourceDocker {
 			return parseDockerFailure(src, out)

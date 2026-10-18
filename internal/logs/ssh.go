@@ -28,6 +28,9 @@ type sshCursor struct {
 // sshRun executes ssh with args and returns stdout. Replaced in tests.
 var sshRun = func(ctx context.Context, args []string) ([]byte, error) {
 	cmd := exec.CommandContext(ctx, "ssh", args...)
+	// A ControlPersist master or a grandchild can keep the stderr pipe open
+	// after ssh exits; do not wait for it longer than this.
+	cmd.WaitDelay = 2 * time.Second
 	var stderr bytes.Buffer
 	cmd.Stderr = &stderr
 	out, err := cmd.Output()
@@ -60,11 +63,34 @@ func BuildSSHArgs(s config.Source, remoteCommand string) []string {
 		args = append(args, "-p", strconv.Itoa(s.Port))
 	}
 	args = append(args, "-o", "BatchMode=yes", "-o", "StrictHostKeyChecking="+strict)
+	if s.Multiplex {
+		// Plugin sources: fail fast on a dead station (connect, or a
+		// ControlMaster whose peer went away) instead of waiting sshTimeout.
+		args = append(args, "-o", "ConnectTimeout=10",
+			"-o", "ServerAliveInterval=5", "-o", "ServerAliveCountMax=2")
+		if dir := muxDirFunc(); dir != "" {
+			args = append(args, "-o", "ControlMaster=auto",
+				"-o", "ControlPersist=60", "-o", "ControlPath="+dir+"/%C")
+		}
+	}
 	target := s.Host
 	if s.User != "" {
 		target = s.User + "@" + s.Host
 	}
 	return append(args, target, remoteCommand)
+}
+
+// MaxSSHBytes caps how much a single ssh call may transfer.
+const MaxSSHBytes = maxSSHBytes
+
+// RangeResult is one read of a remote file: up to maxLines whole lines
+// starting at a byte offset, the offset after them, the file size and
+// whether the end of the file was reached.
+type RangeResult struct {
+	Lines  []string
+	Offset int64
+	Size   int64
+	EOF    bool
 }
 
 // ReadSSH tails a remote file through the system ssh client. At most
@@ -82,6 +108,24 @@ func ReadSSH(src config.Source, cursor string, maxLines int) (Chunk, error) {
 		requested = prev.Offset
 	}
 
+	r, err := ReadSSHRange(context.Background(), src, src.Path, requested, maxLines)
+	if err != nil {
+		return Chunk{}, err
+	}
+	return Chunk{
+		Lines:  r.Lines,
+		Cursor: encodeCursor(sshCursor{Source: fingerprint, Offset: r.Offset}),
+		EOF:    r.EOF,
+	}, nil
+}
+
+// ReadSSHRange reads up to maxLines lines of the remote file path on src's
+// host, starting at byte offset (restarting at 0 when offset is past the end,
+// i.e. the file was truncated or rotated). At most maxSSHBytes are
+// transferred; a capped response is cut at its last newline and never
+// reports EOF. The call is bounded by ctx and sshTimeout.
+func ReadSSHRange(ctx context.Context, src config.Source, path string, offset int64, maxLines int) (RangeResult, error) {
+	offset = max(offset, 0)
 	script := fmt.Sprintf(
 		`FILE=%s; `+
 			`SIZE=$(wc -c < "$FILE" 2>/dev/null || echo -1); `+
@@ -91,35 +135,34 @@ func ReadSSH(src config.Source, cursor string, maxLines int) (Chunk, error) {
 			`START=$((REQ_OFFSET + 1)); `+
 			`printf "%s%%s\n" "$SIZE"; `+
 			`tail -c +"$START" "$FILE" | head -c %d`,
-		shellQuote(src.Path), missingFileMarker, requested, sizeHeaderPrefix, maxSSHBytes,
+		shellQuote(path), missingFileMarker, offset, sizeHeaderPrefix, maxSSHBytes,
 	)
 	remoteCommand := "sh -lc " + shellQuote(script)
 
-	ctx, cancel := context.WithTimeout(context.Background(), sshTimeout)
+	ctx, cancel := context.WithTimeout(ctx, sshTimeout)
 	defer cancel()
 
 	stdout, err := sshRun(ctx, BuildSSHArgs(src, remoteCommand))
 	if bytes.HasPrefix(stdout, []byte(missingFileMarker)) {
-		return Chunk{}, &RemoteFileNotFoundError{Path: src.Path}
+		return RangeResult{}, &RemoteFileNotFoundError{Path: path}
 	}
 	if err != nil {
-		return Chunk{}, err
+		return RangeResult{}, err
 	}
 
 	nl := bytes.IndexByte(stdout, '\n')
 	if nl < 0 {
-		return Chunk{}, &InvalidSSHResponseError{Msg: "invalid ssh log response header"}
+		return RangeResult{}, &InvalidSSHResponseError{Msg: "invalid ssh log response header"}
 	}
 	header, body := string(stdout[:nl]), stdout[nl+1:]
 	if !strings.HasPrefix(header, sizeHeaderPrefix) {
-		return Chunk{}, &InvalidSSHResponseError{Msg: "missing ssh size header"}
+		return RangeResult{}, &InvalidSSHResponseError{Msg: "missing ssh size header"}
 	}
 	remoteSize, err := strconv.ParseInt(strings.TrimSpace(strings.TrimPrefix(header, sizeHeaderPrefix)), 10, 64)
 	if err != nil {
-		return Chunk{}, &InvalidSSHResponseError{Msg: "missing ssh size header"}
+		return RangeResult{}, &InvalidSSHResponseError{Msg: "missing ssh size header"}
 	}
 
-	offset := requested
 	if offset > remoteSize {
 		offset = 0
 	}
@@ -132,9 +175,10 @@ func ReadSSH(src config.Source, cursor string, maxLines int) (Chunk, error) {
 	}
 
 	lines, consumed, eof := extractLines(body, maxLines)
-	return Chunk{
+	return RangeResult{
 		Lines:  lines,
-		Cursor: encodeCursor(sshCursor{Source: fingerprint, Offset: offset + int64(consumed)}),
+		Offset: offset + int64(consumed),
+		Size:   remoteSize,
 		EOF:    eof && !capped,
 	}, nil
 }

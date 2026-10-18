@@ -132,10 +132,20 @@ It is also offered to agents as a source called `mcplogview-self`, handy for deb
 Directory with optional per-source guidance files, `<skillsDir>/<sourceId>.md`. Default: `log-skills` next to
 the config file. See [Using it with agents](using-with-agents.md#skills-per-source-guidance).
 
+## `pluginDirs` and `plugins`
+
+Optional [Lua plugins](plugins.md). `pluginDirs` lists the directories searched for `<name>.lua` or
+`<name>/init.lua` (default `["plugins"]`, next to the config file). `plugins` is an array of
+`{ "name", "enabled", "allow", "ssh", "fs", "timeoutSeconds", "opts" }` entries; `allow` grants the `ssh`
+and/or `fs` capability, each with its own block. Example: [`examples/plugins.json`](examples/plugins.json).
+Every key, default and validation rule is in [Lua plugins](plugins.md#configuration). Plugin changes are
+applied by a running server like source changes.
+
 ## Changing the config while the server runs
 
-A running server re-reads the file every couple of seconds and applies changes to **sources** and **skills**
+A running server re-reads the file every couple of seconds and applies changes to **sources**, **skills** and **plugins**
 without a restart or dropping connections (this is how [switching sources on and off](sources.md#switching-sources-on-and-off)
 works for a central instance). A file that does not parse is logged to the self-log and ignored: the
-previous sources stay active. `transport` and `logging` changes need a restart; the self-log notes when
+previous sources stay active. A change to `pluginDirs` or `plugins` reloads the plugin host; edits to
+plugin *files* are not watched (see [Lua plugins](plugins.md#known-limitations)). `transport` and `logging` changes need a restart; the self-log notes when
 you changed them.

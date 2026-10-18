@@ -132,7 +132,7 @@ func ReadDocker(src config.Source, cursor string, maxLines int) (Chunk, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), sshTimeout)
 	defer cancel()
 
-	out, err := runScript(ctx, src, dockerScript(src.Container, since, expectID, false))
+	out, err := RunScript(ctx, src, dockerScript(src.Container, since, expectID, false))
 	if bytes.HasPrefix(out, []byte(errPrefix)) {
 		return Chunk{}, parseDockerFailure(src, out)
 	}

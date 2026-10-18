@@ -77,3 +77,15 @@ func TestLoad(t *testing.T) {
 		t.Fatalf("%+v", p)
 	}
 }
+
+func TestFromText(t *testing.T) {
+	p := FromText("fake/x", "Fake", "# Skill\nbody")
+	if p.Origin != "plugin" || p.SourceID != "fake/x" || p.Structured.SourceID != "fake/x" ||
+		p.RenderedMarkdown != "# Skill\nbody" || p.Warnings == nil {
+		t.Fatalf("%+v", p)
+	}
+	f := FromText("fake/x", "Fake", "")
+	if f.Origin != "fallback" || f.SourceID != "fake/x" || f.RenderedMarkdown == "" || len(f.Structured.QuickStart) == 0 {
+		t.Fatalf("%+v", f)
+	}
+}

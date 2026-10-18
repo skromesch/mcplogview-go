@@ -90,6 +90,10 @@ type Source struct {
 	StrictHostKeyChecking bool   `json:"strictHostKeyChecking,omitempty"`
 	// Disabled keeps a source in the file but hides it from agents.
 	Disabled bool `json:"disabled,omitempty"`
+	// Multiplex shares one ssh connection between calls. It is an internal
+	// switch set by the plugin ssh capability, not a configured option, so
+	// it is never read from (or written to) JSON.
+	Multiplex bool `json:"-"`
 }
 
 // UnmarshalJSON applies per-source defaults (type=local, ssh port=22).
@@ -149,6 +153,9 @@ type Config struct {
 	SkillsDir string    `json:"skillsDir"`
 	Transport Transport `json:"transport"`
 	Logging   Logging   `json:"logging"`
+	// PluginDirs are searched for Lua plugins (default: <config dir>/plugins).
+	PluginDirs []string    `json:"pluginDirs"`
+	Plugins    []PluginRef `json:"plugins"`
 }
 
 // EnabledSources returns the sources agents may use (everything not disabled).
@@ -222,6 +229,7 @@ func (c *Config) Finalize(baseDir string) error {
 	c.SkillsDir = resolvePath(baseDir, c.SkillsDir)
 	c.Transport.HTTPSKey = resolvePath(baseDir, c.Transport.HTTPSKey)
 	c.Transport.HTTPSCert = resolvePath(baseDir, c.Transport.HTTPSCert)
+	c.finalizePlugins(baseDir)
 	for i := range c.Sources {
 		c.Sources[i].Path = resolvePathFor(c.Sources[i], baseDir)
 		c.Sources[i].IdentityFile = resolvePath(baseDir, c.Sources[i].IdentityFile)
@@ -290,7 +298,7 @@ func (c *Config) validate() error {
 			return fmt.Errorf("sources[%d] (%s): %w", i, s.ID, err)
 		}
 	}
-	return nil
+	return c.validatePlugins()
 }
 
 // resolvePathFor leaves remote (ssh) paths untouched: they are not local files.

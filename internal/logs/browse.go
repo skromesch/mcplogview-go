@@ -44,7 +44,7 @@ func ListDir(loc config.Source, dir string) ([]DirEntry, error) {
 	} else {
 		ctx, cancel := context.WithTimeout(context.Background(), sshTimeout)
 		defer cancel()
-		out, err := runScript(ctx, loc, fmt.Sprintf(`LC_ALL=C ls -1Ap -- %s`, shellQuote(dir)))
+		out, err := RunScript(ctx, loc, fmt.Sprintf(`LC_ALL=C ls -1Ap -- %s`, shellQuote(dir)))
 		if err != nil {
 			return nil, err
 		}
@@ -78,7 +78,7 @@ func ListContainers(loc config.Source) ([]Container, error) {
 
 	script := `command -v docker >/dev/null 2>&1 || { echo "` + errPrefix + `nodocker"; exit 13; }; ` +
 		`docker ps -a --format '{{.Names}}\t{{.Image}}\t{{.Status}}'`
-	out, err := runScript(ctx, loc, script)
+	out, err := RunScript(ctx, loc, script)
 	if strings.HasPrefix(string(out), errPrefix) {
 		return nil, parseDockerFailure(loc, out)
 	}

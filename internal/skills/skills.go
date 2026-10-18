@@ -166,3 +166,28 @@ func BuiltinSelf(sourceID string) Payload {
 		}, "\n"),
 	}
 }
+
+// FromText builds the skill of a plugin source from the text its plugin
+// registered; without text (empty) a generated fallback is returned.
+func FromText(sourceID, label, text string) Payload {
+	src := config.Source{Type: "plugin", ID: sourceID, Label: label}
+	if text == "" {
+		return fallback(src, "", nil)
+	}
+	purpose, qs, queries, ts := commonGuidance(src)
+	return Payload{
+		SourceID: sourceID,
+		Origin:   "plugin",
+		Warnings: []string{},
+		Structured: Structured{
+			SourceID:        sourceID,
+			Version:         1,
+			Tags:            []string{"plugin", "logs"},
+			Purpose:         purpose,
+			QuickStart:      qs,
+			Queries:         queries,
+			Troubleshooting: ts,
+		},
+		RenderedMarkdown: text,
+	}
+}

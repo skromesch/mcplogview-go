@@ -144,3 +144,22 @@ func TestFollowLog(t *testing.T) {
 		t.Fatalf("follow: %s", text)
 	}
 }
+
+// Tool and sourceId descriptions cover plugin sources, not only configured ones.
+func TestToolDescriptionsCoverPluginSources(t *testing.T) {
+	cs := connect(t, filepath.Join(t.TempDir(), "x.log"))
+	res, err := cs.ListTools(context.Background(), nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, tool := range res.Tools {
+		schema, _ := json.Marshal(tool.InputSchema)
+		all := tool.Description + " " + string(schema)
+		if strings.Contains(all, "configured log source") {
+			t.Fatalf("%s still says configured only: %s", tool.Name, all)
+		}
+		if tool.Name != "follow_log" && !strings.Contains(all, "plugin") {
+			t.Fatalf("%s does not mention plugin sources: %s", tool.Name, all)
+		}
+	}
+}

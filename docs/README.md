@@ -13,6 +13,7 @@ files on remote hosts over SSH, and Docker container logs. It is one static bina
 | [HTTP mode](http-mode.md) | run **one central instance** that many agents connect to, with a token |
 | [Running in Docker](docker.md) | start that instance with `docker compose`, hardened, with a Docker-log proxy |
 | [Using it with agents](using-with-agents.md) | understand the tools, cursors and per-source "skills" agents get |
+| [Lua plugins](plugins.md) | extend it with sandboxed Lua plugins: custom source trees, tools, hooks |
 | [Troubleshooting](troubleshooting.md) | fix "no config found", SSH/Docker errors, 401s, Inspector problems |
 
 The screenshots are generated from the real program: see [screenshots/](screenshots/).

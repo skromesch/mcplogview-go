@@ -40,6 +40,7 @@ Details: **[Getting started](docs/getting-started.md)**.
 | [HTTP mode](docs/http-mode.md) | one central instance for many agents, with a token |
 | [Running in Docker](docs/docker.md) | `docker compose up` for that instance, hardened, with a Docker-log proxy |
 | [Using it with agents](docs/using-with-agents.md) | the four tools, cursors, per-source skills |
+| [Lua plugins](docs/plugins.md) | sandboxed Lua plugins: custom source trees, tools and hooks |
 | [Troubleshooting](docs/troubleshooting.md) | common errors and fixes |
 
 ## At a glance
@@ -50,6 +51,8 @@ Details: **[Getting started](docs/getting-started.md)**.
 - **stdio** by default (each agent starts its own process), or **Streamable HTTP** for one shared instance,
   protected by a bearer token.
 - **Config lookup:** `--config`, `$LOG_SOURCES_CONFIG`, `./mcplogview.json`, `~/.config/mcplogview/config.json`.
+- **Plugins:** optional, admin-installed Lua plugins add source trees, tools and hooks ([docs](docs/plugins.md)).
+- **Plugin tooling:** `mcplogview plugin sync` installs plugins from git with a lock file, `plugin test` runs their Lua tests ([docs](docs/plugins.md#installing-plugins-from-git)).
 - **Tools for agents:** `list_logs`, `get_log_skill`, `read_log_chunk`, `follow_log`.
 
 ## Development

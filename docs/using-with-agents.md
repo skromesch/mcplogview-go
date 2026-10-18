@@ -20,7 +20,7 @@ Recommended flow: `list_logs` → `get_log_skill` → `read_log_chunk` / `follow
 
 ### `list_logs`
 
-No arguments. Returns the sources that are switched on:
+Returns the sources that are switched on (and the roots of any [plugin sources](plugins.md)):
 
 ```json
 { "logs": [ { "id": "app", "label": "App log",
@@ -28,6 +28,16 @@ No arguments. Returns the sources that are switched on:
 ```
 
 `description` and `hint` are left out when you did not set them.
+
+Optional argument `parent`: the id of an `expandable` entry. [Lua plugins](plugins.md) can register whole trees
+of logs; `list_logs` with `parent=<id>` lists the level below it (child ids are `<parent>/<name>`; entries with
+`"leaf": true` can be read with `read_log_chunk` and `follow_log`). Plugins can also add their own tools, which
+appear in the tool list next to these four.
+
+Plugin sources are marked: their `list_logs` entries (roots and children) and their `read_log_chunk` /
+`follow_log` results carry an extra `"plugin": "<plugin name>"` field, so an agent can tell content produced
+by plugin code from the server's built-in sources. Configured sources never have it. Results of tools that
+plugins register are not marked.
 
 ### `get_log_skill`
 
@@ -38,8 +48,8 @@ Arguments: `sourceId`. Returns guidance for that log: how it is laid out and how
 
 | Argument | Type | Default | |
 |----------|------|---------|--|
-| `sourceId` | string | required | A source id from `list_logs` |
-| `cursor` | string or null | none | The `cursor` of the previous result; omit to start at the beginning |
+| `sourceId` | string | required | A source id from `list_logs` (for plugin sources, a leaf id from `list_logs parent=...`) |
+| `cursor` | string or null | none | The `cursor` of the previous result; omit to start at the beginning (a plugin source may start elsewhere, e.g. at the end of the newest file; see its skill) |
 | `maxLines` | integer 1-500 | 100 | Lines to return |
 
 Result:

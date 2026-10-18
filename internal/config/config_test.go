@@ -196,3 +196,19 @@ func TestTransportAuthHelpers(t *testing.T) {
 		t.Fatal("a too-short token must be rejected")
 	}
 }
+
+// Multiplex is an internal switch of the plugin ssh capability; a sources[]
+// entry must not be able to turn it on.
+func TestSourceMultiplexNotConfigurable(t *testing.T) {
+	cfgPath := filepath.Join(t.TempDir(), "c.json")
+	write(t, cfgPath, `{"sources":[{"type":"ssh","id":"a","label":"A","host":"h","user":"u","identityFile":"k","path":"/x","multiplex":true}]}`)
+	cfg, err := Load(cfgPath)
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, s := range cfg.Sources {
+		if s.ID == "a" && s.Multiplex {
+			t.Fatalf("multiplex must not be settable from config: %+v", s)
+		}
+	}
+}

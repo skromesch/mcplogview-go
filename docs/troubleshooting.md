@@ -40,6 +40,13 @@ Another process owns the port. Stop it or choose another: `mcplogview transport 
 **`input ended before the wizard finished`**
 `configure` got its answers from a pipe that ran out. It needs a terminal, or one input line per prompt.
 
+## Plugins
+
+**A plugin does not show up.** Look in the server's own log for `plugin <name>: load failed: ...`: the plugin
+file was not found in `pluginDirs`, did not return a table with `api_version = 1`, or raised an error. See
+[Debugging](plugins.md#debugging) in the plugin guide. Plugin files are not watched: change the config or
+restart after editing one.
+
 ## Local files
 
 **`open /path: no such file or directory` / `permission denied`**

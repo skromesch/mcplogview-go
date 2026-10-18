@@ -83,6 +83,7 @@ func runServe(args []string, stderr io.Writer) int {
 	}
 
 	logger.Info("shutdown initiated")
+	rt.Close()
 	logger.Close()
 	if err != nil && !errors.Is(err, context.Canceled) && !errors.Is(err, io.EOF) {
 		logger.Error("server stopped with error", err)
