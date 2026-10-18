@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="582" height="362" viewBox="0 0 582 362" role="img" aria-label="mcplogview configure">
+<svg xmlns="http://www.w3.org/2000/svg" width="582" height="380" viewBox="0 0 582 380" role="img" aria-label="mcplogview configure">
 <style>text{font-family:SFMono-Regular,"SF Mono",Menlo,Consolas,"DejaVu Sans Mono","Liberation Mono",monospace;font-size:14px;white-space:pre}</style>
-<rect width="582" height="362" rx="10" fill="#0d1117"/>
+<rect width="582" height="380" rx="10" fill="#0d1117"/>
 <path d="M0 10a10 10 0 0 1 10-10h562a10 10 0 0 1 10 10v28H0z" fill="#161b22"/>
 <circle cx="18" cy="19" r="6" fill="#ff5f56"/>
 <circle cx="38" cy="19" r="6" fill="#ffbd2e"/>
@@ -17,7 +17,8 @@
 <text x="18" y="231.0" xml:space="preserve" textLength="168.0" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">Test all sources</tspan></text>
 <text x="18" y="249.0" xml:space="preserve" textLength="445.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">Server mode: stdio or HTTP (one central instance)</tspan></text>
 <text x="18" y="267.0" xml:space="preserve" textLength="428.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">How to register with Claude Code / other agents</tspan></text>
-<text x="18" y="285.0" xml:space="preserve" textLength="67.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">Quit</tspan></text>
-<text x="18" y="303.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
-<text x="18" y="339.0" xml:space="preserve" textLength="327.6" lengthAdjust="spacing"><tspan fill="#626262">↑</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">up</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">↓</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">down</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">/</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">filter</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">submit</tspan></text>
+<text x="18" y="285.0" xml:space="preserve" textLength="403.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">Plugins: list, sync, update, switch on / off</tspan></text>
+<text x="18" y="303.0" xml:space="preserve" textLength="67.2" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan><tspan fill="#c9d1d9">   </tspan><tspan fill="#d0d0d0">Quit</tspan></text>
+<text x="18" y="321.0" xml:space="preserve" textLength="8.4" lengthAdjust="spacing"><tspan fill="#444444">┃</tspan></text>
+<text x="18" y="357.0" xml:space="preserve" textLength="327.6" lengthAdjust="spacing"><tspan fill="#626262">↑</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">up</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">↓</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">down</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">/</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">filter</tspan><tspan fill="#3a3a3a"> • </tspan><tspan fill="#626262">enter</tspan><tspan fill="#c9d1d9"> </tspan><tspan fill="#4e4e4e">submit</tspan></text>
 </svg>
